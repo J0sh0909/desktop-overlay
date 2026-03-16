@@ -59,6 +59,8 @@ public class OverlayForm : Form
         _backBuffer = new Bitmap(Width, Height);
         _sensors = new SensorReader();
 
+        Microsoft.Win32.SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
+
         AnalyzeWallpaper();
 
         _timer = new System.Windows.Forms.Timer { Interval = _refreshMs };
@@ -98,6 +100,26 @@ public class OverlayForm : Form
     {
         SetWindowPos(Handle, HWND_BOTTOM, 0, 0, 0, 0,
             SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+    }
+
+    private void OnDisplaySettingsChanged(object? sender, EventArgs e)
+    {
+        if (InvokeRequired)
+        {
+            Invoke(OnDisplaySettingsChanged, sender, e);
+            return;
+        }
+
+        var screen = Screen.PrimaryScreen!;
+        Location = Point.Empty;
+        Size = screen.Bounds.Size;
+
+        _backBuffer.Dispose();
+        _backBuffer = new Bitmap(Width, Height);
+
+        AnalyzeWallpaper();
+        RenderToBuffer();
+        Invalidate();
     }
 
     // ── Wallpaper color extraction ──
@@ -544,6 +566,7 @@ public class OverlayForm : Form
 
     protected override void OnFormClosed(FormClosedEventArgs e)
     {
+        Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
         _timer.Stop();
         _zTimer.Stop();
         _sensors.Dispose();
