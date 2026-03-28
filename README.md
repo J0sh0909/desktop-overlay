@@ -21,7 +21,7 @@ The output executable will be at `publish\DesktopStats.exe`.
 
 ## Autostart on Login (Task Scheduler)
 
-The app requires administrator privileges, so the **Startup folder and registry Run key methods will not work** — Windows won't elevate them silently. Task Scheduler is the correct approach: it can run a task elevated at logon with no UAC prompt.
+The app requires administrator privileges, so the **Startup folder and registry Run key methods will not work**  Windows won't elevate them silently. Task Scheduler is the correct approach: it can run a task elevated at logon with no UAC prompt.
 
 ### Steps
 
@@ -67,7 +67,7 @@ The app requires administrator privileges, so the **Startup folder and registry 
 
 ### Test it
 
-Right-click the task in Task Scheduler and choose **"Run"** — the overlay should appear on your desktop immediately without a UAC prompt.
+Right-click the task in Task Scheduler and choose **"Run"**  the overlay should appear on your desktop immediately without a UAC prompt.
 
 ### Alternative: PowerShell one-liner
 
@@ -105,7 +105,7 @@ Unregister-ScheduledTask -TaskName "DesktopStats Overlay" -Confirm:$false
 | Problem | Cause | Fix |
 |---|---|---|
 | Overlay doesn't appear | Not running as admin | Ensure "Run with highest privileges" is set in the task |
-| Sensors show `—` | LibreHardwareMonitor needs admin | Same as above |
+| Sensors show `` | LibreHardwareMonitor needs admin | Same as above |
 | Overlay mispositioned after RDP resize | Fixed: handled via `DisplaySettingsChanged` event | Update to latest build |
 | Overlay flickers or appears on top of windows | Z-order timer issue | Restart the task via Task Scheduler |
 | UAC prompt appears at logon | Task not configured for elevated logon | Verify "Run with highest privileges" and logon type is "Interactive" |
